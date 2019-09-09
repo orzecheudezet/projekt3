@@ -9,7 +9,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Projekt3
 {
     [Table("Production.Product")]
-    class ProductionProduct
+    public class ProductionProduct
     {
         [Key]
         public int ProductID { get; set; }
@@ -25,7 +25,7 @@ namespace Projekt3
 
         [ForeignKey("ProductSubcategory")]
         public int? ProductSubcategoryID { get; set; }
-        public ProductSubcategory ProductSubcategory { get; set; }
+        public ProductionProductSubcategory ProductSubcategory { get; set; }
 
     }
 }
