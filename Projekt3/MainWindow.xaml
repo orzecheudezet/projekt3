@@ -7,19 +7,19 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800"
         Loaded="Window_Loaded">
-
     <Window.DataContext>
-        <local:TestViewModel/>
+        <local:MainWindowViewModel/>
     </Window.DataContext>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="150" />
-            <ColumnDefinition Width="250" />
+            <ColumnDefinition Width="177.3" />
+            <ColumnDefinition Width="72.3"/>
             <ColumnDefinition Width="0"/>
             <ColumnDefinition Width="200" />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
-        <ListBox Name="lbProductSubcategories" SelectionChanged="LbProductSubcategories_SelectionChanged" Grid.Column="0">
+        <ListBox Name="lbProductSubcategories" SelectionChanged="LbProductSubcategories_SelectionChanged" Grid.Column="0" Margin="0,0,0.4,0">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
@@ -28,7 +28,7 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <ListView Name="lbProducts" SelectionChanged="LbProducts_SelectionChanged" Grid.Column="1" SelectedItem="{Binding Path=ProductItem}" >
+        <ListView Name="lbProducts" SelectionChanged="LbProducts_SelectionChanged" SelectedItem="{Binding Path=ProductItem}" Grid.ColumnSpan="3" Margin="150,0,0,0" >
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
@@ -37,7 +37,7 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <StackPanel Grid.Row="0" Grid.Column="3" Orientation="Vertical">
+        <StackPanel Grid.Row="0" Grid.Column="3" Orientation="Vertical" Grid.ColumnSpan="2">
             <TextBlock>ProductID:</TextBlock>
             <TextBox Text="{Binding Path=ProductItem.ProductID, UpdateSourceTrigger=PropertyChanged}" />
             <TextBlock>Product name:</TextBlock>
@@ -54,12 +54,14 @@
             <TextBox Text="{Binding Path=ProductItem.ListPrice}" />
             <TextBlock>Product Size:</TextBlock>
             <TextBox Text="{Binding Path=ProductItem.Size}" />
-            
+
 
             <Button Click="Button_Click">Zapisz</Button>
         </StackPanel>
-        <StackPanel Grid.Row="0" Grid.Column="4" Orientation="Vertical" Margin="10,10,9.6,10">
-            <ComboBox SelectionChanged="ComboBox_SelectionChanged"  Name="lbColors">
+        <StackPanel Grid.Row="0" Grid.Column="5" Orientation="Vertical" Margin="10,10,9.6,10">
+            <ComboBox SelectionChanged="ColorComboBox_SelectionChanged"  Name="lbColors">
+            </ComboBox>
+            <ComboBox SelectionChanged="SizeComboBox_SelectionChanged"  Name="lbSizes">
             </ComboBox>
         </StackPanel>
     </Grid>
