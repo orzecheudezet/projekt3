@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,18 +22,59 @@ namespace Projekt3
     /// </summary>
     public partial class MainWindow : Window
     {
-        private Model1 context = new Model1(); 
+        private AdventureWorksContext context = new AdventureWorksContext();
+        private ObservableCollection<ProductionProductSubcategory> productSubcategories = new ObservableCollection<ProductionProductSubcategory>();
+        private ObservableCollection<ProductionProduct> products = new ObservableCollection<ProductionProduct>();
+        private ObservableCollection<string> colors = new ObservableCollection<string>();
+
+        private ProductionProduct productionProduct = new ProductionProduct();
+        private ProductionProduct ProductionProduct
+        {
+            get { return productionProduct; }
+            set
+            {
+                productionProduct = value;
+                OnPropertyChanged("ProductionProduct");
+            }
+        }
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void OnPropertyChanged(string propName)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propName));
+            }
+        }
+
 
 
         public MainWindow()
         {
             InitializeComponent();
+
+            foreach (var item in this.context.ProductionProductSubcategories)
+            {
+                this.productSubcategories.Add(item);
+            }
+            foreach (var item in this.context.ProductionProducts)
+            {
+                this.products.Add(item);
+            }
+            foreach (var item in this.context.ProductionProducts.Select(x => x.Color).Distinct())
+            {
+                this.colors.Add(item);
+            }
+
+            lbProductSubcategories.ItemsSource = this.productSubcategories;
+            lbProducts.ItemsSource = this.products;
+            lbColors.ItemsSource = this.colors;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             TestViewModel tvm = this.DataContext as TestViewModel;
-            tvm.SubCatViewSource.Source = context.ProductSubcategories.ToList();
+            //tvm.SubCatViewSource.Source = context.ProductSubcategories.ToList();
 
             //tvm.ProductViewSource.Source = context.ProductionProducts.ToList();
             tvm.Colors.Source = context.ProductionProducts.Select(x => x.Color ?? "None" ).Distinct().ToList();
@@ -47,16 +90,21 @@ namespace Projekt3
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            
-            TestViewModel tvm = this.DataContext as TestViewModel;
-            tvm.ProductViewSource.Source = new List<string>();
-         
-            tvm.ProductViewSource.Source = 
-            context.ProductionProducts.Select(x => x).Where(x => x.Color == tvm.ColorChoice).ToList();
-            tvm.ProductViewSource.Source = new List<string>();
+            lbProducts.ItemsSource = this.products
+                .Where(x => x.Color == (string)lbColors.SelectedItem);
         }
 
-        
+        private void LbProducts_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            this.ProductionProduct = (ProductionProduct)lbProducts.SelectedItem;
+        }
+
+        private void LbProductSubcategories_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            lbProducts.ItemsSource = this.products
+                .Where(x => x.ProductSubcategoryID
+                == (lbProductSubcategories.SelectedItem as ProductionProductSubcategory).ProductSubcategoryID);
+        }
     }
     class TestViewModel
     {
@@ -70,7 +118,6 @@ namespace Projekt3
         
         public String ColorChoice { get; set; }
         public ProductionProduct ProductItem { get; set; }
-        public ProductSubcategory CurrentItem { get; set; }
         public CollectionViewSource SubCatViewSource { get; set; }
         public CollectionViewSource ProductViewSource { get; set; }
         public CollectionViewSource Colors { get; set; }

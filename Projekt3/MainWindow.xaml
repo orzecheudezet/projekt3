@@ -15,20 +15,20 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="150" />
             <ColumnDefinition Width="250" />
+            <ColumnDefinition Width="0"/>
             <ColumnDefinition Width="200" />
-            <ColumnDefinition Width="*" />
+            <ColumnDefinition />
         </Grid.ColumnDefinitions>
-        <ListBox ItemsSource="{Binding Path=SubCatViewSource.View}" Grid.Row="0" Grid.Column="0"  SelectedItem="{Binding Path=CurrentItem, Mode=TwoWay}">
+        <ListBox Name="lbProductSubcategories" SelectionChanged="LbProductSubcategories_SelectionChanged" Grid.Column="0">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
-                        
                         <TextBlock Text="{Binding Name}"/>
                     </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <ListView x:Name="Lview1" ItemsSource="{Binding Path=CurrentItem.ProductionProducts}" Grid.Row="0" Grid.Column="1" SelectedItem="{Binding Path=ProductItem, Mode=TwoWay}" >
+        <ListView Name="lbProducts" SelectionChanged="LbProducts_SelectionChanged" Grid.Column="1" >
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
@@ -37,35 +37,30 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <StackPanel Grid.Row="0" Grid.Column="2" Orientation="Vertical">
+        <StackPanel DataContext="{Binding ProductionProduct}" Grid.Row="0" Grid.Column="3" Orientation="Vertical">
             <TextBlock>ProductID:</TextBlock>
-            <TextBox Text="{Binding Path=ProductItem.ProductID}" />
+            <TextBox Text="{Binding ProductID, UpdateSourceTrigger=PropertyChanged}" />
             <TextBlock>Product name:</TextBlock>
-            <TextBox Text="{Binding Path=ProductItem.Name}" />
+            <TextBox Text="{Binding Path=ProductionProduct.Name, UpdateSourceTrigger=PropertyChanged}" />
             <TextBlock>Product number:</TextBlock>
-            <TextBox Text="{Binding Path=ProductItem.ProductNumber}" />
+            <TextBox Text="{Binding ProductNumber}" />
             <TextBlock>Product color:</TextBlock>
-            <TextBox Text="{Binding Path=ProductItem.Color}" />
+            <TextBox Text="{Binding Color}" />
             <TextBlock>Product SafetyStockLevel:</TextBlock>
-            <TextBox Text="{Binding Path=ProductItem.SafetyStockLevel}" />
+            <TextBox Text="{Binding SafetyStockLevel}" />
             <TextBlock>Product StandardCost:</TextBlock>
-            <TextBox Text="{Binding Path=ProductItem.StandardCost}" />
+            <TextBox Text="{Binding StandardCost}" />
             <TextBlock>Product ListPrice:</TextBlock>
-            <TextBox Text="{Binding Path=ProductItem.ListPrice}" />
+            <TextBox Text="{Binding ListPrice}" />
             <TextBlock>Product Size:</TextBlock>
-            <TextBox Text="{Binding Path=ProductItem.Size}" />
+            <TextBox Text="{Binding Size}" />
             <TextBlock>Selected:</TextBlock>
             <TextBox Text="{Binding Path=ColorChoice}" />
 
             <Button Click="Button_Click">Zapisz</Button>
         </StackPanel>
-        <StackPanel Grid.Row="0" Grid.Column="3" Orientation="Vertical" Margin="10">
-            <ComboBox SelectionChanged="ComboBox_SelectionChanged" ItemsSource="{Binding Path=Colors.View}" SelectedItem="{Binding Path=ColorChoice, Mode=TwoWay}">
-                <ComboBox.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding SourceCollection}" />
-                    </DataTemplate>
-                </ComboBox.ItemTemplate>
+        <StackPanel Grid.Row="0" Grid.Column="4" Orientation="Vertical" Margin="10,10,9.6,10">
+            <ComboBox SelectionChanged="ComboBox_SelectionChanged"  Name="lbColors">
             </ComboBox>
         </StackPanel>
     </Grid>

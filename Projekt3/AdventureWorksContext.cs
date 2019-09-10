@@ -8,15 +8,15 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Projekt3
 {
-    class Model1 : DbContext
+    class AdventureWorksContext : DbContext
     {
-        public Model1()
-            : base("name=Model1")
+        public AdventureWorksContext()
+            : base("name=AdventureWorksContext")
         {
         }
 
-        public DbSet<ProductSubcategory>
-            ProductSubcategories { get; set; }
+        public DbSet<ProductionProductSubcategory>
+            ProductionProductSubcategories { get; set; }
 
         public DbSet<ProductionProduct>
             ProductionProducts { get; set; }

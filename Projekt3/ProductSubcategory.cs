@@ -9,7 +9,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Projekt3
 {
     [Table("Production.ProductSubcategory")]
-    class ProductSubcategory
+    public class ProductionProductSubcategory
     {
         [Key]
         public int ProductSubcategoryID { get; set; }
