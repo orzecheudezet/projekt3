@@ -26,6 +26,7 @@ namespace Projekt3
         private ObservableCollection<ProductionProductSubcategory> productSubcategories = new ObservableCollection<ProductionProductSubcategory>();
         private ObservableCollection<ProductionProduct> products = new ObservableCollection<ProductionProduct>();
         private ObservableCollection<string> colors = new ObservableCollection<string>();
+        private ObservableCollection<string> sizes = new ObservableCollection<string>();
 
         private ProductionProduct productionProduct = new ProductionProduct();
         private ProductionProduct ProductionProduct
@@ -41,10 +42,7 @@ namespace Projekt3
 
         private void OnPropertyChanged(string propName)
         {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(propName));
-            }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
         }
 
 
@@ -65,38 +63,72 @@ namespace Projekt3
             {
                 this.colors.Add(item);
             }
+            foreach (var item in this.context.ProductionProducts.Select(x => x.Size).Distinct())
+            {
+                this.sizes.Add(item);
+            }
 
             lbProductSubcategories.ItemsSource = this.productSubcategories;
             lbProducts.ItemsSource = this.products;
             lbColors.ItemsSource = this.colors;
+            lbSizes.ItemsSource = this.sizes;
+        }
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            context.SaveChanges();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            TestViewModel tvm = this.DataContext as TestViewModel;
-            //tvm.SubCatViewSource.Source = context.ProductSubcategories.ToList();
-
-            //tvm.ProductViewSource.Source = context.ProductionProducts.ToList();
-            tvm.Colors.Source = context.ProductionProducts.Select(x => x.Color ?? "None" ).Distinct().ToList();
-            
-
-        }
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {      
-            context.SaveChanges();
+            MainWindowViewModel viewModel = this.DataContext as MainWindowViewModel;
         }
 
-        
-
-        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void ColorComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            lbProducts.ItemsSource = this.products
-                .Where(x => x.Color == (string)lbColors.SelectedItem);
+            var productionProductsList = lbProducts.ItemsSource as IEnumerable<ProductionProduct>;
+
+            try
+            {
+                productionProductsList = productionProductsList.Where(x => x.Color == (string)lbColors.SelectedItem);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+            lbProducts.ItemsSource = productionProductsList;
+        }
+
+        private void SizeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var productionProductsList = lbProducts.ItemsSource as IEnumerable<ProductionProduct>;
+
+            try
+            {
+                productionProductsList = productionProductsList.Where(x => x.Size == (string)lbSizes.SelectedItem);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+            lbProducts.ItemsSource = productionProductsList;
         }
 
         private void LbProducts_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            this.ProductionProduct = (ProductionProduct)lbProducts.SelectedItem;
+            if(lbProducts.SelectedItem != null)
+            {
+                var productID = (lbProducts.SelectedItem as ProductionProduct).ProductID;
+                var product = this.context.ProductionProducts
+                    .Where(x => x.ProductID == productID)
+                    .First();
+
+                this.ProductionProduct = product;
+            }
+   
         }
 
         private void LbProductSubcategories_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -104,24 +136,13 @@ namespace Projekt3
             lbProducts.ItemsSource = this.products
                 .Where(x => x.ProductSubcategoryID
                 == (lbProductSubcategories.SelectedItem as ProductionProductSubcategory).ProductSubcategoryID);
+
+            lbColors.SelectedItem = null;
+            lbSizes.SelectedItem = null;
         }
     }
-    class TestViewModel
+    class MainWindowViewModel
     {
-        public TestViewModel()
-        {
-            this.SubCatViewSource = new CollectionViewSource();
-            this.ProductViewSource = new CollectionViewSource();
-            this.Colors = new CollectionViewSource();
-        }
-        
-        
-        public String ColorChoice { get; set; }
         public ProductionProduct ProductItem { get; set; }
-        public CollectionViewSource SubCatViewSource { get; set; }
-        public CollectionViewSource ProductViewSource { get; set; }
-        public CollectionViewSource Colors { get; set; }
-
-
     }
 }
