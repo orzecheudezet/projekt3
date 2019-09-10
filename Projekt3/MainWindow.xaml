@@ -28,7 +28,7 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <ListView Name="lbProducts" SelectionChanged="LbProducts_SelectionChanged" Grid.Column="1" >
+        <ListView Name="lbProducts" SelectionChanged="LbProducts_SelectionChanged" Grid.Column="1" SelectedItem="{Binding Path=ProductItem}" >
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
@@ -37,25 +37,24 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <StackPanel DataContext="{Binding ProductionProduct}" Grid.Row="0" Grid.Column="3" Orientation="Vertical">
+        <StackPanel Grid.Row="0" Grid.Column="3" Orientation="Vertical">
             <TextBlock>ProductID:</TextBlock>
-            <TextBox Text="{Binding ProductID, UpdateSourceTrigger=PropertyChanged}" />
+            <TextBox Text="{Binding Path=ProductItem.ProductID, UpdateSourceTrigger=PropertyChanged}" />
             <TextBlock>Product name:</TextBlock>
-            <TextBox Text="{Binding Path=ProductionProduct.Name, UpdateSourceTrigger=PropertyChanged}" />
+            <TextBox Text="{Binding Path=ProductItem.Name, UpdateSourceTrigger=PropertyChanged}" />
             <TextBlock>Product number:</TextBlock>
-            <TextBox Text="{Binding ProductNumber}" />
+            <TextBox Text="{Binding Path=ProductItem.ProductNumber}" />
             <TextBlock>Product color:</TextBlock>
-            <TextBox Text="{Binding Color}" />
+            <TextBox Text="{Binding Path=ProductItem.Color}" />
             <TextBlock>Product SafetyStockLevel:</TextBlock>
-            <TextBox Text="{Binding SafetyStockLevel}" />
+            <TextBox Text="{Binding Path=ProductItem.SafetyStockLevel}" />
             <TextBlock>Product StandardCost:</TextBlock>
-            <TextBox Text="{Binding StandardCost}" />
+            <TextBox Text="{Binding Path=ProductItem.StandardCost}" />
             <TextBlock>Product ListPrice:</TextBlock>
-            <TextBox Text="{Binding ListPrice}" />
+            <TextBox Text="{Binding Path=ProductItem.ListPrice}" />
             <TextBlock>Product Size:</TextBlock>
-            <TextBox Text="{Binding Size}" />
-            <TextBlock>Selected:</TextBlock>
-            <TextBox Text="{Binding Path=ColorChoice}" />
+            <TextBox Text="{Binding Path=ProductItem.Size}" />
+            
 
             <Button Click="Button_Click">Zapisz</Button>
         </StackPanel>
